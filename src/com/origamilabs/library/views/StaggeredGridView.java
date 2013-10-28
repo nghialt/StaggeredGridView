@@ -22,8 +22,6 @@ package com.origamilabs.library.views;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.origamilabs.library.R;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -55,6 +53,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListAdapter;
+
+import com.origamilabs.library.R;
 
 /**
  * ListView and GridView just not complex enough? Try StaggeredGridView!
@@ -794,7 +794,8 @@ public class StaggeredGridView extends ViewGroup {
         }
     }
 
-    public void computeScroll() {
+    @Override
+	public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
             final int y = mScroller.getCurrY();
             final int dy = (int) (y - mLastTouchY);
@@ -963,7 +964,7 @@ public class StaggeredGridView extends ViewGroup {
 
         final int top = getPaddingTop();
         for(int i = 0; i<colCount; i++){
-        	final int offset =  top + ((mRestoreOffsets != null)? Math.min(mRestoreOffsets[i], 0) : 0);
+        	final int offset =  top + ((mRestoreOffsets != null && i < mRestoreOffsets.length)? Math.min(mRestoreOffsets[i], 0) : 0);
         	mItemTops[i] = (offset == 0) ? mItemTops[i] : offset;
         	mItemBottoms[i] = (offset == 0) ? mItemBottoms[i] : offset;
         }
@@ -1175,9 +1176,9 @@ public class StaggeredGridView extends ViewGroup {
         while (nextCol >= 0 && mItemTops[nextCol] > fillTo && position >= 0) {
             // make sure the nextCol is correct. check to see if has been mapped
         	// otherwise stick to getNextColumnUp()
-        	if(!mColMappings.get(nextCol).contains((Integer) position)){
+        	if(!mColMappings.get(nextCol).contains(position)){
         		for(int i=0; i < mColMappings.size(); i++){
-        			if(mColMappings.get(i).contains((Integer) position)){
+        			if(mColMappings.get(i).contains(position)){
         				nextCol = i;
         				break;
         			}
@@ -2077,10 +2078,12 @@ public class StaggeredGridView extends ViewGroup {
 		}
 
 		public static final Creator<ColMap> CREATOR = new Creator<ColMap>() {
+			@Override
 			public ColMap createFromParcel(Parcel source) {
 				return new ColMap(source);
 			}
 
+			@Override
 			public ColMap[] newArray(int size) {
 				return new ColMap[size];
 			}
@@ -2135,11 +2138,13 @@ public class StaggeredGridView extends ViewGroup {
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel in) {
+            @Override
+			public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
-            public SavedState[] newArray(int size) {
+            @Override
+			public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
         };
@@ -2252,7 +2257,8 @@ public class StaggeredGridView extends ViewGroup {
     }
 
     final class CheckForTap implements Runnable {
-        public void run() {
+        @Override
+		public void run() {
             if (mTouchMode == TOUCH_MODE_DOWN) {
 
                 mTouchMode = TOUCH_MODE_TAP;
@@ -2301,7 +2307,8 @@ public class StaggeredGridView extends ViewGroup {
     }
 
     private class CheckForLongPress extends WindowRunnnable implements Runnable {
-        public void run() {
+        @Override
+		public void run() {
             final int motionPosition = mMotionPosition;
             final View child = getChildAt(motionPosition - mFirstPosition);
             if (child != null) {
@@ -2326,7 +2333,8 @@ public class StaggeredGridView extends ViewGroup {
     private class PerformClick extends WindowRunnnable implements Runnable {
         int mClickMotionPosition;
 
-        public void run() {
+        @Override
+		public void run() {
             // The data has changed since we posted this action in the event queue,
             // bail out before bad things happen
             if (mDataChanged) return;
