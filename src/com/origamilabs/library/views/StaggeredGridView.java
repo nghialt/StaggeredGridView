@@ -2033,16 +2033,16 @@ public class StaggeredGridView extends ViewGroup {
                 for (int i = 0; i < colCount; i++) {
                     mItemBottoms[i] = mItemTops[i];
                 }
-            }
 
-            // reset list if position does not exist or id for position has changed
-            if(mFirstPosition > mItemCount-1 || mAdapter.getItemId(mFirstPosition) != mFirstAdapterId){
-            	mFirstPosition = 0;
-            	Arrays.fill(mItemTops, 0);
-            	Arrays.fill(mItemBottoms, 0);
+                // reset list if position does not exist or id for position has changed
+                if(mFirstPosition > mItemCount-1 || mAdapter.getItemId(mFirstPosition) != mFirstAdapterId){
+                	mFirstPosition = 0;
+                	Arrays.fill(mItemTops, 0);
+                	Arrays.fill(mItemBottoms, 0);
 
-            	if(mRestoreOffsets!=null)
-            	Arrays.fill(mRestoreOffsets, 0);
+                	if(mRestoreOffsets!=null)
+                	Arrays.fill(mRestoreOffsets, 0);
+                }
             }
 
             // TODO: consider repopulating in a deferred runnable instead
